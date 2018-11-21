@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/TitanLi/NodeJS/issues"
   },
-  "homepage": "https://github.com/TitanLi/NodeJS#readme"
+  "homepage": "https://github.com/TitanLi/NodeJS#readme",
+  "dependencies": {
+    "azure-iot-device": "^1.8.1",
+    "azure-iot-device-mqtt": "^1.8.1",
+    "dotenv": "^6.1.0"
+  }
 }
