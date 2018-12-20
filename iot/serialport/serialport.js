@@ -1,3 +1,5 @@
+//Docker control device
+//sudo docker run -tid --device=/dev/ttyACM0 node bash
 const SerialPort = require("serialport");
 const Readline = SerialPort.parsers.Readline;
 const port = new SerialPort('/dev/ttyACM0');
