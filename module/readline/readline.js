@@ -1,3 +1,4 @@
+// 參考教學：https://segmentfault.com/a/1190000015271621
 const readline = require('readline');
 const rl = readline.createInterface({input : process.stdin,
                           output : process.stdout});
