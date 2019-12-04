@@ -1,0 +1,29 @@
+{
+    "version": "1.0",
+    "type": "direct",
+    "workflow": "example",
+    "main": "task1",
+    "tasks": {
+        "task1": {
+            "descript": "task1-1",
+            "action": "shell",
+            "data": "echo task1-1 > ./test/task1-1.txt",
+            "on_success": "task2",
+            "on_error": null
+        },
+        "task2": {
+            "descript": "task1-2",
+            "action": "shell",
+            "data": "echo task1-2 > ./test/task1-2.txt",
+            "on_success": "task3",
+            "on_error": null
+        },
+        "task3": {
+            "descript": "task1-3",
+            "action": "shell",
+            "data": "echo task1-3 > ./test/task1-3.txt",
+            "on_success": null,
+            "on_error": null
+        }
+    }
+}
