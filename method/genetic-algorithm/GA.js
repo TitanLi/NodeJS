@@ -2,8 +2,8 @@ class GA {
     constructor(vnf) {
         this.compute = [2, 4, 4, 4, 6, 8, 8, 8, 10, 12];
         this.vnf = vnf;
-        this.initGenSize = 2;
-        // this.initGenSize = this.vnf.length * this.compute.length
+        // this.initGenSize = 2;
+        this.initGenSize = this.vnf.length * this.compute.length
         this.initGen = new Array(this.initGenSize);
         // 在基因大小中新增計算節點維度
         for (let i = 0; i < this.initGen.length; i++) {
@@ -82,8 +82,10 @@ class GA {
         return initGen;
     }
 
-    copulation(copyInitGen) {
+    copulation(initGen) {
         console.time("copulationTimeCost");
+        let copyInitGen = this.arrayCopy(initGen);
+        let originInitGen = this.arrayCopy(initGen);
         // 基因數量大小
         for (let i = 0; i < copyInitGen.length; i++) {
             // 用於比較輸出結果是否有超過Compute能力
@@ -218,6 +220,13 @@ class GA {
         // console.log(arr,data);
         let found = arr.find(element => element == data);
         return found == undefined ? false : true;
+    }
+
+    arrayCopy(currentArray){
+        let newArray = currentArray.map(function(arr) {
+            return arr.slice();
+        });
+        return newArray;
     }
 }
 
