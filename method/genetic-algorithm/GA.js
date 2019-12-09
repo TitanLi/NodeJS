@@ -1,8 +1,9 @@
 class GA {
     constructor(vnf) {
-        this.compute = [4, 8, 4, 6, 4, 2, 8, 8, 10, 12];
+        this.compute = [2, 4, 4, 4, 6, 8, 8, 8, 10, 12];
         this.vnf = vnf;
-        this.initGenSize = this.vnf.length * this.compute.length
+        this.initGenSize = 2;
+        // this.initGenSize = this.vnf.length * this.compute.length
         this.initGen = new Array(this.initGenSize);
         // 在基因大小中新增計算節點維度
         for (let i = 0; i < this.initGen.length; i++) {
@@ -81,59 +82,69 @@ class GA {
         return initGen;
     }
 
-    copulation(initGen) {
+    copulation(copyInitGen) {
         console.time("copulationTimeCost");
         // 基因數量大小
-        console.log(initGen.length);
-        for (let i = 0; i < initGen.length; i++) {
+        for (let i = 0; i < copyInitGen.length; i++) {
             // 用於比較輸出結果是否有超過Compute能力
-            let initCompute = this.compute.slice();
-            // let initVNF = this.vnf.slice();
-            // 隨機選擇要交換的基因
-            let copulationPoint = Math.floor(Math.random() * initCompute.length) + 1;
+            let [...initCompute] = this.compute;
             if (i % 2 == 0) {
+                console.log(`交換基因池中第${i}、${i + 1}個基因`);
+                // 隨機選擇要交換的基因
+                let copulationPoint = Math.floor(Math.random() * initCompute.length) + 1;
+                console.log(`交換基因位子 : ${copulationPoint}`);
                 // 基因交換暫存使用
                 let cache = 0;
                 // 交換基因使用
-                let fatherGen = initGen[i][copulationPoint];
-                let motherGen = initGen[i + 1][copulationPoint];
+                let fatherGen = copyInitGen[i][copulationPoint];
+                let motherGen = copyInitGen[i + 1][copulationPoint];
                 // 保留初始基因
                 let originFatherGen = fatherGen;
                 let originMotherGen = motherGen;
-                // console.log(copulationPoint);
-                // console.log(initGen[i]);
-                // console.log(initGen[i + 1]);
                 // 如果被選中的基因沒有東西將不做處理
                 if (fatherGen.length > 0 | motherGen.length > 0) {
                     if (!this.arrayCompare(fatherGen, motherGen)) {
                         // 基因交換
-                        cache = fatherGen;
-                        fatherGen = motherGen;
+                        cache = fatherGen.slice();
+                        fatherGen = motherGen.slice();
                         motherGen = cache;
-                        console.log(`change ${i}`);
+                        console.log(`originFatherGen : ${JSON.stringify(originFatherGen)} \t fatherGen : ${JSON.stringify(fatherGen)}`);
+                        console.log(`originMotherGen : ${JSON.stringify(originMotherGen)} \t motherGen : ${JSON.stringify(motherGen)}`);
+                        // 更新基因回基因池
+                        copyInitGen[i][copulationPoint] = fatherGen;
+                        copyInitGen[i + 1][copulationPoint] = motherGen;
                         // 過濾基因，用來處理交配後重複及缺少基因問題
+                        // 父基因 => 1.需刪除deduplicationFatherGen重複基因 2.補上缺少基因deduplicationMotherGen
+                        // 母基因 => 1.需刪除deduplicationMotherGen重複基因 2.補上缺少基因deduplicationFatherGen
                         let deduplicationFatherGen = this.arrayFilter(originMotherGen, originFatherGen);
                         let deduplicationMotherGen = this.arrayFilter(originFatherGen, originMotherGen);
+                        console.log(`基因交換後父基因需刪除的重複基因 => ${JSON.stringify(deduplicationFatherGen)}`);
+                        console.log(`基因交換後母基因需刪除的重複基因 => ${JSON.stringify(deduplicationMotherGen)}`);
                         // 處理deduplicationFatherGen
                         for (let j = 0; j < deduplicationFatherGen.length; j++) {
                             // 刪除父親重複基因
                             let deleteRepeat = true;
                             while (deleteRepeat) {
                                 let deduplication = Math.floor(Math.random() * initCompute.length) + 1;
-                                if (deduplication != copulationPoint && this.arrayFind(initGen[i][deduplication], deduplicationFatherGen[j])) {
-                                    this.arrayFilter(initGen[i][deduplication], [deduplicationFatherGen[j]]);
+                                if ((deduplication != copulationPoint) && (this.arrayFind(copyInitGen[i][deduplication], deduplicationFatherGen[j]))) {
+                                    copyInitGen[i][deduplication] = this.arrayFilter(copyInitGen[i][deduplication], [deduplicationFatherGen[j]]);
                                     deleteRepeat = false;
+                                    console.log(`選擇父基因位子 : ${deduplication}`);
+                                    console.log(`刪除 ${deduplicationFatherGen[j]} 基因`);
                                 }
                             }
+
                             // 加入母親欠缺基因
                             let addGen = true;
-                            while(addGen){
+                            while (addGen) {
                                 let addGenPoint = Math.floor(Math.random() * initCompute.length) + 1;
                                 // 不將欠缺基因加入原先位子
                                 if (addGenPoint != copulationPoint) {
-                                    if (this.sumData(initGen[i+1][addGenPoint]) + deduplicationFatherGen[j] <= initCompute[copulationPoint - 1]) {
-                                        initGen[i+1][addGenPoint].push(deduplicationFatherGen[j]);
+                                    if ((this.sumData(copyInitGen[i + 1][addGenPoint]) + deduplicationFatherGen[j]) <= initCompute[addGenPoint - 1]) {
+                                        copyInitGen[i + 1][addGenPoint].push(deduplicationFatherGen[j]);
                                         addGen = false;
+                                        console.log(`選擇母基因位子 : ${addGenPoint}`);
+                                        console.log(`加入 ${deduplicationFatherGen[j]} 基因`);
                                     }
                                 }
                             }
@@ -146,9 +157,11 @@ class GA {
                                 let addGenPoint = Math.floor(Math.random() * initCompute.length) + 1;
                                 // 不將欠缺基因加入原先位子
                                 if (addGenPoint != copulationPoint) {
-                                    if (this.sumData(initGen[i][addGenPoint]) + deduplicationMotherGen[j] <= initCompute[copulationPoint - 1]) {
-                                        initGen[i][addGenPoint].push(deduplicationMotherGen[j]);
+                                    if ((this.sumData(copyInitGen[i][addGenPoint]) + deduplicationMotherGen[j]) <= initCompute[addGenPoint - 1]) {
+                                        copyInitGen[i][addGenPoint].push(deduplicationMotherGen[j]);
                                         addGen = false;
+                                        console.log(`選擇父基因位子 : ${addGenPoint}`);
+                                        console.log(`加入 ${deduplicationMotherGen[j]} 基因`);
                                     }
                                 }
                             }
@@ -156,27 +169,20 @@ class GA {
                             let deleteRepeat = true;
                             while (deleteRepeat) {
                                 let deduplication = Math.floor(Math.random() * initCompute.length) + 1;
-                                if (deduplication != copulationPoint && this.arrayFind(initGen[i+1][deduplication], deduplicationMotherGen[j])) {
-                                    this.arrayFilter(initGen[i+1][deduplication], [deduplicationMotherGen[j]]);
+                                if ((deduplication != copulationPoint) && (this.arrayFind(copyInitGen[i + 1][deduplication], deduplicationMotherGen[j]))) {
+                                    copyInitGen[i + 1][deduplication] = this.arrayFilter(copyInitGen[i + 1][deduplication], [deduplicationMotherGen[j]]);
                                     deleteRepeat = false;
+                                    console.log(`選擇母基因位子 : ${deduplication}`);
+                                    console.log(`刪除 ${deduplicationMotherGen[j]} 基因`);
                                 }
                             }
                         }
-                        // 交換基因結果
-                        // console.log(originFatherGen, fatherGen);
-                        // console.log(originMotherGen, motherGen);
-                        // 更新基因
-                        initGen[i][copulationPoint] = fatherGen;
-                        initGen[i+1][copulationPoint] = motherGen;
                     }
                 }
-                // console.log("result");
-                // console.log(initGen[i]);
-                // console.log(initGen[i + 1]);
             }
         }
         console.timeEnd("copulationTimeCost");
-        return initGen;
+        return copyInitGen;
     }
 
     sumData(arr) {
@@ -199,13 +205,17 @@ class GA {
     }
 
     arrayFilter(arr1, arr2) {
+        // console.log("arrayFilter");
+        let arrResult = arr1.slice();
         for (let i = 0; i < arr2.length; i++) {
-            arr1.remove(arr2[i]);
+            arrResult.remove(arr2[i]);
         }
-        return arr1;
+        return arrResult;
     }
 
     arrayFind(arr, data) {
+        // console.log("arrayFind");
+        // console.log(arr,data);
         let found = arr.find(element => element == data);
         return found == undefined ? false : true;
     }
