@@ -2,5 +2,8 @@
 let compute = [1,2,3,4,5,6];
 // Method 1
 let [...initCompute] = compute;
+compute[0] = 2;
+console.log(compute);
+console.log(initCompute);
 // Method 2
 let copyCompute = compute.slice();
