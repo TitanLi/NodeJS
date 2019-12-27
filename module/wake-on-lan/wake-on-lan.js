@@ -1,7 +1,4 @@
-// 1. First, install ethtool:
-// $ sudo apt install ethtool
-// 2. For testing and temporarily enabling WoL: 
-// $ sudo ethtool -s eth0 wol g
+// 環境安裝：https://github.com/TitanLi/CloudNative/tree/master/ubuntu#wake-on-lan
 
 const wol = require('wol');
  
