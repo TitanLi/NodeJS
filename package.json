@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/TitanLi/NodeJS#readme",
   "dependencies": {
+    "@kubernetes/client-node": "^0.11.0",
     "azure-iot-device": "^1.8.1",
     "azure-iot-device-mqtt": "^1.8.1",
     "child_process": "^1.0.2",
@@ -29,6 +30,7 @@
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
+    "kubernetes-client": "^8.3.6",
     "mongoose": "^5.8.7",
     "mqtt": "^2.18.8",
     "mysql": "^2.16.0",
