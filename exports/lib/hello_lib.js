@@ -32,5 +32,6 @@ class firstClass{
 
 module.exports = {
     sayHello : sayHello,
-    firstClass : firstClass
+    firstClass : firstClass,
+    ...require('./multiple.js')
 }

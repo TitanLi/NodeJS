@@ -10,3 +10,5 @@ console.log(firstClass.less());
 // 9
 console.log(firstClass.firstClassData);
 firstClass.firstClassData = 100;
+
+hello_lib.a();
