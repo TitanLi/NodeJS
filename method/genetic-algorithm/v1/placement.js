@@ -86,7 +86,7 @@ class GA {
                 } else {
                     // VNF嘗試放置所選位置失敗，將該位置剔除，選擇新的位置
                     vnfSelect = false;
-                    catchComputeResource.splice(selectCatchComputeResourcePoint, 1);
+                    catchComputeResource.remove(setPosition);
                     // 當所有節點剩餘資源皆無法放置VNF時代表本次初始化基因失敗需重新放置
                     if (catchComputeResource.length == 0) {
                         vnfSelect = true;
