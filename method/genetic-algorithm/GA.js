@@ -1,7 +1,9 @@
-const compute = [2, 4, 4, 4, 6, 8, 8, 8, 10, 12];
+// const compute = [2, 4, 4, 4, 6, 8, 8, 8, 10, 12];
+const compute = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8];
 // [ 10 ], [], [], [], [], [ 6 ], [], [], [], [ 2, 3, 5 ], [ 2, 4, 6 ] 
 const vnf = [2, 2, 3, 4, 5, 6, 6];
-const initGenSize = 100;
+// const vnf = [1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 6];
+const initGenSize = 10;
 let initGen = new Array(initGenSize);
 
 Array.prototype.indexOf = function (val) {
@@ -308,7 +310,7 @@ async function test() {
     // 為初始化基因給予評分
     let initScoreGen = await initScore(initResult);
     let cache_Data;
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 100000; i++) {
         if (i == 0) {
             let initCopulationResult = await copulation(initScoreGen);
             cache_Data = arrayCopy(initCopulationResult);
@@ -320,7 +322,9 @@ async function test() {
     // initGen[0][0][0] = 123;
     // cache_Data[1][0][0] = 456;
     // console.log(initResult);
+    console.log('初始化基因');
     console.log(initScoreGen.sort());
+    console.log('GA優化');
     console.log(cache_Data.sort());
     // console.log(initGen);
 }
