@@ -80,7 +80,7 @@ class GA {
                     // 更新計算節點剩餘資源
                     initComputeResource[setPosition] = initComputeResource[setPosition] - initVNF[selectVNF];
                     // 將目標物體移出
-                    initVNF.splice(selectVNF, 1);
+                    initVNF.remove(initVNF[selectVNF]);
                     // 放置成功選擇新的VNF
                     vnfSelect = true;
                 } else {
