@@ -57,8 +57,8 @@ class GA {
          */
         for (let i = 0; i < this.initPopulationSize; i++) {
             // 初始化變數
-            let initComputeResource = this.compute.slice();
-            let initVNF = this.vnf.slice();
+            let initComputeResource = [...this.compute];
+            let initVNF = [...this.vnf];
             let vnfSelect = true;
             let selectVNF = 0;
             let catchComputeResource = [];
