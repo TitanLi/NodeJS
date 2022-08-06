@@ -18,15 +18,14 @@ const pod_memory_usage_bytes = (pod) => {
 /**
  * Pod memory 需求資源
  * Kubernetes/Compute Resources/Node(Pod)
- * @param {Pod name} pod
+ * @param {Node name} node
  * 單位：bytes
  */
-const pod_resource_requests_memory_bytes = (pod) => {
+const pod_resource_requests_memory_bytes = (node) => {
     return (`
         sum(\
             kube_pod_container_resource_requests_memory_bytes{\
-                cluster="",\
-                pod="${pod}"}\
+                node="${node}"}\
             ) by (pod)\
     `);
 }

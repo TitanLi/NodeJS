@@ -22,15 +22,15 @@ const pod_cpu_usage_seconds = (pod) => {
 /**
  * Pod CPU 需求資源
  * Kubernetes/Compute Resources/Node(Pod)
- * @param {Pod name} pod
+ * @param {Node name} node
  * 單位：vCPU/Core 數量
  */
-const pod_resource_requests_cpu_cores = (pod) => {
+const pod_resource_requests_cpu_cores = (node) => {
     return(`
         sum(\
             kube_pod_container_resource_requests_cpu_cores{\
                 cluster="",\
-                pod="${pod}"}\
+                node="${node}"
             ) by (pod)
     `);
 }
